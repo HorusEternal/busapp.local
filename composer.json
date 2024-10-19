@@ -82,6 +82,7 @@
     },
     "require-dev": {
         "psalm/plugin-symfony": "^5.2",
+        "symfony/maker-bundle": "^1.61",
         "vimeo/psalm": "^5.26"
     }
 }
