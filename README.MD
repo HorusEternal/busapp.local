@@ -49,4 +49,4 @@ docker compose exec app symfony console doctrine:fixtures:load
 docker compose exec app symfony console doctrine:fixtures:load
 ```
 
-Открыть swagger.yaml в любом OpenAPI клиенте и выполни запросы
+Открой swagger.yaml в любом OpenAPI клиенте и выполни запросы
