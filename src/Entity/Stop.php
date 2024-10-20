@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\StopRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StopRepository::class)]
@@ -18,16 +17,9 @@ class Stop
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Route>
-     */
-    #[ORM\ManyToMany(targetEntity: Route::class, mappedBy: 'stops')]
-    private Collection $routes;
+    #[ORM\ManyToOne(targetEntity: Route::class, inversedBy: 'stops')]
+    private Route $route;
 
-    public function __construct()
-    {
-        $this->routes = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -47,29 +39,22 @@ class Stop
     }
 
     /**
-     * @return Collection<int, Route>
+     * @return Route
      */
-    public function getRoutes(): Collection
+    public function getRoute(): Route
     {
-        return $this->routes;
+        return $this->route;
     }
 
-    public function addRoute(Route $route): static
+    /**
+     * @param Route $route
+     * @return Stop
+     */
+    public function setRoute(Route $route): Stop
     {
-        if (!$this->routes->contains($route)) {
-            $this->routes->add($route);
-            $route->addStop($this);
-        }
-
+        $this->route = $route;
         return $this;
     }
 
-    public function removeRoute(Route $route): static
-    {
-        if ($this->routes->removeElement($route)) {
-            $route->removeStop($this);
-        }
 
-        return $this;
-    }
 }

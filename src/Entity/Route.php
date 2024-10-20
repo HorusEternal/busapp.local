@@ -15,28 +15,17 @@ class Route
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $direction = null;
 
-    /**
-     * @var Collection<int, Stop>
-     */
-    #[ORM\ManyToMany(targetEntity: Stop::class, inversedBy: 'routes')]
+    #[ORM\OneToMany(targetEntity: Stop::class, mappedBy: 'route')]
     private Collection $stops;
 
-    /**
-     * @var Collection<int, Bus>
-     */
-    #[ORM\OneToMany(targetEntity: Bus::class, mappedBy: 'route')]
-    private Collection $buses;
 
     public function __construct()
     {
         $this->stops = new ArrayCollection();
-        $this->buses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,17 +33,6 @@ class Route
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getDirection(): ?string
     {
@@ -78,46 +56,13 @@ class Route
 
     public function addStop(Stop $stop): static
     {
-        if (!$this->stops->contains($stop)) {
-            $this->stops->add($stop);
-        }
-
+        $this->stops->add($stop);
         return $this;
     }
 
     public function removeStop(Stop $stop): static
     {
         $this->stops->removeElement($stop);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Bus>
-     */
-    public function getBuses(): Collection
-    {
-        return $this->buses;
-    }
-
-    public function addBus(Bus $bus): static
-    {
-        if (!$this->buses->contains($bus)) {
-            $this->buses->add($bus);
-            $bus->setRoute($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBus(Bus $bus): static
-    {
-        if ($this->buses->removeElement($bus)) {
-            // set the owning side to null (unless already changed)
-            if ($bus->getRoute() === $this) {
-                $bus->setRoute(null);
-            }
-        }
 
         return $this;
     }
