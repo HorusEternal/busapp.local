@@ -28,7 +28,7 @@ class RouteController extends AbstractController
             return new JsonResponse(['error' => 'Route not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $editedRoute = $routeService->editStops($route, $editableStops->stops);
+        $editedRoute = $routeService->editOrCreateStops($route, $editableStops->stops);
 
         $stops = [];
         foreach ($editedRoute->getStops() as $stop) {

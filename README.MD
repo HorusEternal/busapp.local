@@ -14,5 +14,37 @@
 ### Шаг 1: Склонируй репозиторий
 
 ```bash
-git clone https://github.com/your-username/bus-schedule-app.git
-cd bus-schedule-app
+https://github.com/HorusEternal/busapp.local.git
+cd busapp.local
+```
+
+### Шаг 2: Сбилди образ и запусти контейнеры
+
+```bash
+docker compose up -d --build
+```
+
+### Шаг 3: Установи зависимости
+
+```bash
+docker compose exec app composer install
+```
+
+### Шаг 4: Выполни миграции в БД
+
+```bash
+docker compose exec app symfony console doctrine:migrations:migrate
+```
+
+### Шаг 5: Загрузи фикстуры в БД
+
+```bash
+docker compose exec app symfony console doctrine:fixtures:load
+```
+
+### Шаг 6: Выполни 
+
+
+```bash
+docker compose exec app symfony console doctrine:fixtures:load
+```

@@ -1,0 +1,119 @@
+openapi: 3.1.0
+info:
+  title: 'Bus Schedule API'
+  description: 'API для демонстрации расписания рейсовых автобусов'
+  version: '1.0.0'
+servers:
+  - url: 'http://localhost:5000'
+    description: 'Local development server'
+paths:
+  /api/find-bus:
+    get:
+      summary: 'Поиск автобусов по начальной и конечной остановке'
+      description: 'Возвращает автобусы, маршрут которых включает отрезок от одной остановки к другой, с ближайшими тремя вариантами времени прибытия.'
+      parameters:
+        - name: from
+          in: query
+          required: true
+          description: 'ID исходной остановки'
+          schema:
+            type: integer
+        - name: to
+          in: query
+          required: true
+          description: 'ID конечной остановки'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Список автобусов с маршрутами и временем прибытия'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  from:
+                    type: string
+                    example: 'ул. Пушкина'
+                  to:
+                    type: string
+                    example: 'ул. Ленина'
+                  buses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        route:
+                          type: string
+                          example: 'Автобус №11 в сторону ост. Попова'
+                        next_arrivals:
+                          type: array
+                          items:
+                            type: string
+                            example: '08:15'
+        '404':
+          description: 'Остановки не найдены'
+
+  /api/route/edit-stops:
+    post:
+      summary: 'Edit route stops'
+      description: 'Редактирование набора остановок маршрута'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 'ID маршрута'
+                stops:
+                  type: array
+                  description: 'Список остановок'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: 'Остановка 1'
+
+      responses:
+        '200':
+          description: 'Маршрут успешно обновлён'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Route updated successfully'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      stops:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: 'Остановка 1'
+        '404':
+          description: 'Маршрут не найден'
+
+components:
+  schemas: { }
+  responses: { }
+  parameters: { }
+  examples: { }
+  requestBodies: { }
+  headers: { }
+  securitySchemes: { }

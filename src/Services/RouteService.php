@@ -17,16 +17,18 @@ final readonly class RouteService
      * @param EditableStops[] $stops
      * @return Route
      */
-    public function editStops(Route $route, array $stops): Route {
-        foreach ($route->getStops() as $stop) {
-            $this->entityManager->remove($stop);
-        }
+    public function editOrCreateStops(Route $route, array $stops): Route {
 
         foreach ($stops as $stopData) {
-            $stop = new Stop();
-            $stop->setName($stopData->name);
-            $stop->setRoute($route);
-            $this->entityManager->persist($stop);
+            $stop = $stopData->id ? $this->entityManager->getRepository(Stop::class)->find($stopData->id) : null;
+            if ($stop) {
+                $stop->setName($stopData->name);
+            } else {
+                $newStop = new Stop();
+                $newStop->setName($stopData->name);
+                $newStop->setRoute($route);
+                $this->entityManager->persist($newStop);
+            }
         }
 
         $this->entityManager->flush();
