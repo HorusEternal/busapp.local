@@ -13,18 +13,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class BusController extends AbstractController
 {
-    public function __construct(readonly private EntityManagerInterface $entityManager)
-    {
-    }
-
     #[Route('/api/find-bus', name: 'find_bus', methods: ['GET'])]
-    public function findBus(Request $request, BusFinderService $busFinderService): JsonResponse
+    public function findBus(Request $request, BusFinderService $busFinderService, EntityManagerInterface $entityManager): JsonResponse
     {
         $fromId = $request->query->get('from');
         $toId = $request->query->get('to');
 
-        $fromStop = $this->entityManager->getRepository(Stop::class)->find($fromId);
-        $toStop = $this->entityManager->getRepository(Stop::class)->find($toId);
+        $fromStop = $entityManager->getRepository(Stop::class)->find($fromId);
+        $toStop = $entityManager->getRepository(Stop::class)->find($toId);
 
         if(!$fromStop || !$toStop) {
             return new JsonResponse([

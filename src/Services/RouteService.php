@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\EditableStops;
 use App\Entity\Route;
 use App\Entity\Stop;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,7 @@ final readonly class RouteService
 
     /**
      * @param Route $route
-     * @param array<array{id: integer, name: string}> $stops
+     * @param EditableStops[] $stops
      * @return Route
      */
     public function editStops(Route $route, array $stops): Route {
@@ -23,7 +24,7 @@ final readonly class RouteService
 
         foreach ($stops as $stopData) {
             $stop = new Stop();
-            $stop->setName($stopData['name']);
+            $stop->setName($stopData->name);
             $stop->setRoute($route);
             $this->entityManager->persist($stop);
         }
